@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>mini speed chart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+      body {
+        text-align: center;
+      }
+      input {
+        width: 180px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      <input
+        class="url"
+        type="text"
+        value="https://images.unsplash.com/photo-1494256997604-768d1f608cac"
+      />
+    </p>
+    <p><input class="speedKbps" type="text" value="" disabled /></p>
+    <canvas id="canvas" style="width: 180px; height: 20px; background-color: rgb(0, 0, 0);"></canvas>
+    <p><input class="detect" type="button" value="Detect" /></p>
+    <p><input class="destroy" type="button" value="Destroy" /></p>
+    <script src="./miniSpeedChart-uncompiled.js"></script>
+    <script>
+      var chart;
+      document.querySelector('.detect').addEventListener('click', function() {
+        chart = new MiniSpeedChart({
+          canvas: '#canvas',
+          url: document.querySelector('.url').value,
+          detectCallback: function(result) {
+            document.querySelector('.speedKbps').value =
+              result.speedKbps.toFixed(2) + ' kbp/s';
+          }
+        });
+      });
+
+      document.querySelector('.destroy').addEventListener('click', function() {
+        if (chart) {
+          chart.destroy();
+        }
+      })
+    </script>
+  </body>
+</html>
