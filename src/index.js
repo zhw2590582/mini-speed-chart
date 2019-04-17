@@ -7,14 +7,14 @@ export default class MiniSpeedChart {
       url: '',
       width: 180,
       height: 20,
-      size: 2,
       backgroundColor: '#000',
       lineColor: '#4f0',
+      lineWidth: 2,
       detectCallback: result => result,
       ...option
     };
 
-    this.dotMatrix = [];
+    this.speeds = [];
     this.$canvas = document.querySelector(this.option.canvas);
     this.ctx = this.$canvas.getContext('2d');
     this.style();
@@ -33,10 +33,10 @@ export default class MiniSpeedChart {
     this.detect = new DetectConnectionSpeed({
       url: this.option.url,
       detectCallback: result => {
-        if (this.dotMatrix.length * this.option.size >= this.option.width) {
-          this.dotMatrix.shift();
+        if (this.speeds.length * this.option.lineWidth >= this.option.width) {
+          this.speeds.shift();
         }
-        this.dotMatrix.push(Number(result.speedKbps.toFixed(2)));
+        this.speeds.push(Number(result.speedKbps.toFixed(2)));
         this.draw();
         this.option.detectCallback(result);
       }
@@ -46,22 +46,19 @@ export default class MiniSpeedChart {
   draw() {
     this.ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
     this.ctx.fillStyle = this.option.lineColor;
-    const min = Math.min(...this.dotMatrix);
-    const max = Math.max(...this.dotMatrix);
+    const min = Math.min(...this.speeds);
+    const max = Math.max(...this.speeds);
     const diff = max - min;
     const scale = diff / this.option.height;
-    this.dotMatrix.forEach((item, index) => {
-      if (this.dotMatrix.length === 1) {
-        this.ctx.fillRect(0, 0, this.option.size, this.option.height);
-      } else {
-        const y = this.option.height - (item - min) / scale;
-        const h = this.option.height - y;
-        this.ctx.fillRect(index * this.option.size, y, this.option.size, h);
-      }
+    this.speeds.forEach((item, index) => {
+      const y = this.option.height - (item - min) / scale;
+      const h = this.option.height - y;
+      this.ctx.fillRect(index * this.option.lineWidth, y, this.option.lineWidth, h);
     });
   }
 
   destroy() {
+    this.speeds = [];
     if (this.detect) {
       this.detect.destroy();
     }

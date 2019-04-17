@@ -119,14 +119,14 @@
         url: '',
         width: 180,
         height: 20,
-        size: 2,
         backgroundColor: '#000',
         lineColor: '#4f0',
+        lineWidth: 2,
         detectCallback: function detectCallback(result) {
           return result;
         }
       }, option);
-      this.dotMatrix = [];
+      this.speeds = [];
       this.$canvas = document.querySelector(this.option.canvas);
       this.ctx = this.$canvas.getContext('2d');
       this.style();
@@ -150,11 +150,11 @@
         this.detect = new detectConnectionSpeed({
           url: this.option.url,
           detectCallback: function detectCallback(result) {
-            if (_this.dotMatrix.length * _this.option.size >= _this.option.width) {
-              _this.dotMatrix.shift();
+            if (_this.speeds.length * _this.option.lineWidth >= _this.option.width) {
+              _this.speeds.shift();
             }
 
-            _this.dotMatrix.push(Number(result.speedKbps.toFixed(2)));
+            _this.speeds.push(Number(result.speedKbps.toFixed(2)));
 
             _this.draw();
 
@@ -169,24 +169,22 @@
 
         this.ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
         this.ctx.fillStyle = this.option.lineColor;
-        var min = Math.min.apply(Math, toConsumableArray(this.dotMatrix));
-        var max = Math.max.apply(Math, toConsumableArray(this.dotMatrix));
+        var min = Math.min.apply(Math, toConsumableArray(this.speeds));
+        var max = Math.max.apply(Math, toConsumableArray(this.speeds));
         var diff = max - min;
         var scale = diff / this.option.height;
-        this.dotMatrix.forEach(function (item, index) {
-          if (_this2.dotMatrix.length === 1) {
-            _this2.ctx.fillRect(0, 0, _this2.option.size, _this2.option.height);
-          } else {
-            var y = _this2.option.height - (item - min) / scale;
-            var h = _this2.option.height - y;
+        this.speeds.forEach(function (item, index) {
+          var y = _this2.option.height - (item - min) / scale;
+          var h = _this2.option.height - y;
 
-            _this2.ctx.fillRect(index * _this2.option.size, y, _this2.option.size, h);
-          }
+          _this2.ctx.fillRect(index * _this2.option.lineWidth, y, _this2.option.lineWidth, h);
         });
       }
     }, {
       key: "destroy",
       value: function destroy() {
+        this.speeds = [];
+
         if (this.detect) {
           this.detect.destroy();
         }
