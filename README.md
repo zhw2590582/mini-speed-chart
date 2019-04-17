@@ -49,4 +49,4 @@ chart.destroy();
 
 ## License
 
-MIT © [Harvey Zack](https://www.zhw-island.com/)
+MIT © [Harvey Zack](https://sleepy.im/)
