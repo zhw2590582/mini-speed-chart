@@ -59,6 +59,7 @@ export default class MiniSpeedChart {
 
   destroy() {
     this.speeds = [];
+    this.ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
     if (this.detect) {
       this.detect.destroy();
     }

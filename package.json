@@ -1,6 +1,6 @@
 {
   "name": "mini-speed-chart",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Detect connection speed with mini chart",
   "main": "dist/miniSpeedChart.js",
   "scripts": {
@@ -33,6 +33,6 @@
     "rollup-plugin-uglify": "^6.0.2"
   },
   "dependencies": {
-    "detect-connection-speed": "^1.0.2"
+    "detect-connection-speed": "^1.0.3"
   }
 }
